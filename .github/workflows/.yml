@@ -1,0 +1,36 @@
+name: CI Pipeline
+on: [push, pull_request]
+
+jobs:
+  format_check:
+    name: Format Check
+    runs-on: ubuntu-latest
+    container: gcc:latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          apt-get update && apt-get install -y git clang-format
+      - name: Check formatting
+        run: |
+          git ls-files *.{c,h} | xargs clang-format -i --verbose
+          git diff --exit-code
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    container: gcc:latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Clean and build
+        run: |
+          make clean
+          make
+          
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-output
+          path: bin/
+          retention-days: 7

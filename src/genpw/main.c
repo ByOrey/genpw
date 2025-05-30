@@ -1,4 +1,4 @@
-#include <genpw.h>
+#include <libgenpw/genpw.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

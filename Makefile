@@ -1,3 +1,5 @@
+TARGET = bin/release/genpw
+
 CC = gcc
 CFLAGS = -Wall -Wextra -O2 -Isrc
 SRC_DIR = src

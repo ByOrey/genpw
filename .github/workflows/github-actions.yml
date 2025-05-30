@@ -8,29 +8,30 @@ jobs:
     container: gcc:latest
     steps:
       - uses: actions/checkout@v4
+      - name: Fix repository ownership
+        run: git config --global --add safe.directory /__w/genpw/genpw
       - name: Install dependencies
-        run: |
-          apt-get update && apt-get install -y git clang-format
+        run: apt-get update && apt-get install -y git clang-format
       - name: Check formatting
         run: |
-          git ls-files *.{c,h} | xargs clang-format -i --verbose
-          git diff --exit-code
+          find . -name '*.c' -o -name '*.h' | xargs clang-format -i --verbose
+          git diff --ignore-submodules --exit-code
 
   build:
     name: Build
+    needs: format_check
     runs-on: ubuntu-latest
     container: gcc:latest
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Clean and build
+      - name: Build project
         run: |
           make clean
           make
-          
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: build-output
+          name: bin
           path: bin/
-          retention-days: 7
+          if-no-files-found: error
+          retention-days: 1

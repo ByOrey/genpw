@@ -103,7 +103,7 @@ CTEST(generate_password, buffer_too_small)
 
     int result = generate_password(
             length,
-            true, // digits
+            true, // digit
             true, // lower
             true, // upper
             true, // special

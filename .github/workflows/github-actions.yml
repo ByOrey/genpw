@@ -35,3 +35,17 @@ jobs:
           path: bin/
           if-no-files-found: error
           retention-days: 1
+
+  test:
+    runs-on: ubuntu-latest
+    container: gcc:latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run tests
+        run: make test
+      - name: Upload build artifacts (if needed)
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: build-output
+          path: ./build
